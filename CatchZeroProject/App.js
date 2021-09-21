@@ -4,8 +4,8 @@ import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreen from 'react-native-splash-screen';
-import HomeScreen from './src/screens/HomeScreen'
 import GameScreen from './src/screens/GameScreen'
+import ResultScreen from './src/screens/ResultScreen'
 
 const Stack = createNativeStackNavigator();
 
@@ -20,8 +20,8 @@ function App() {
     <NavigationContainer
       >
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} options={{headerShown:false}} />
-        <Stack.Screen name="Game" component={GameScreen} options={{headerShown:false}}/>
+        <Stack.Screen name="Game" component={GameScreen} options={{headerShown:false}} />
+        <Stack.Screen name="Result" component={ResultScreen} options={{headerShown:false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
