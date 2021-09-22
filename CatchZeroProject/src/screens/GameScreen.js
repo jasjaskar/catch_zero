@@ -1,6 +1,9 @@
-import{ useEffect, useState } from 'react';
+
+
+
+
 import React, {Component} from 'react';
-import { View, Text, ScrollView, Button, TouchableOpacity, StyleSheet,NativeModules, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet,NativeModules, Platform } from 'react-native';
 import HeaderComponent from '../Components/HeaderComponent';
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from '../common/globe';
 import {
@@ -14,7 +17,6 @@ import {
     SCORE_FOR_MISSING_ZERO,
     SCORE_FOR_MISSING_NON_ZERO
 } from "../common/globe";
-// import RandomNumberGeneratorModule  from "../Components/JavaNativeBridge";
 const { RandomNumberGeneratorModule } = NativeModules;
 
 
@@ -35,26 +37,11 @@ export default class GameScreen extends Component {
         };
         this.gameTimer = null;
         console.log(this.state)
-      }
-
-    generateRandomNumber = async() => {
-
-        // Generating random number from native side, if it is android otherwise from react native side
-        let randomNumber = Platform.OS === 'android' ? await RandomNumberGeneratorModule.getRandomNumber() : Math.floor(Math.random() * (HIGHEST_RANDOM_NUMBER + 1))
-        this.setState({randomNumber: randomNumber})
     }
 
-    clearTimer = async() => {
-        clearInterval(this.gameTimer);
-        this.props.navigation.navigate("Result",
-        {
-          clickedZeros: this.state.clickedZeros,
-          clickedNonZeros : this.state.clickedNonZeros,
-          missedZeros: this.state.missedZeros,
-          missedNonZeros : this.state.missedNonZeros,
-          liveScore: this.state.liveScore,
-          timeElapsed: this.state.gameTime
-        })
+
+    // Method to set the state variables to initial state
+    setStateVariablesToInitialState = async () => {
         this.setState({
             gameTime: TOTAL_GAME_TIME,
             randomNumber:0,
@@ -69,71 +56,95 @@ export default class GameScreen extends Component {
         })
     }
 
-    liveScoreCalculationForPressingActivity = async(randomNumber) => {
+
+    // Method to Clear the timer and route to result screen, After game over
+    clearTimer = async() => {
+        clearInterval(this.gameTimer);
+        this.props.navigation.navigate("Result",
+        {
+          clickedZeros: this.state.clickedZeros,
+          clickedNonZeros : this.state.clickedNonZeros,
+          missedZeros: this.state.missedZeros,
+          missedNonZeros : this.state.missedNonZeros,
+          liveScore: this.state.liveScore,
+        })
+        this.setStateVariablesToInitialState()  
+    }
+
+    // Method to calculate live score
+    liveScoreCalculation = async(randomNumber, isClicked) => {
         if(randomNumber === LEAST_RANDOM_NUMBER){
-            this.setState({
-                liveScore:this.state.liveScore + SCORE_FOR_CLICKING_ZERO,
-                clickedZeros:this.state.clickedZeros + 1
-            })
+            if(isClicked === true){
+                this.setState({
+                    liveScore:this.state.liveScore + SCORE_FOR_CLICKING_ZERO,
+                    clickedZeros:this.state.clickedZeros + 1
+                })
+            }
+            else{
+                this.setState({
+                    liveScore:this.state.liveScore + SCORE_FOR_MISSING_ZERO,
+                    missedZeros:this.state.missedZeros + 1
+                })
+            }
         }
         else if (randomNumber > LEAST_RANDOM_NUMBER && randomNumber <= HIGHEST_RANDOM_NUMBER){
-            this.setState({
-                clickedNonZeros:this.state.clickedNonZeros + 1,
-                liveScore:this.state.liveScore + SCORE_FOR_CLICKING_NON_ZERO,
-                colorChange: true,
-            })
+            if(isClicked === true){
+                this.setState({
+                    clickedNonZeros:this.state.clickedNonZeros + 1,
+                    liveScore:this.state.liveScore + SCORE_FOR_CLICKING_NON_ZERO,
+                    colorChange: true,
+                })
+            }
+            else{
+                this.setState({
+                    liveScore:this.state.liveScore + SCORE_FOR_MISSING_NON_ZERO,
+                    missedNonZeros:this.state.missedNonZeros + 1
+                })
+            }
+            
         }
         else{
-            console.log("Something went wrong")
+            console.log("Something went wrong with number", isClicked, "random", randomNumber)
         }
     }
 
-    liveScoreCalculationForNotPressingActivity = async(randomNumber) => {
-        if(randomNumber === LEAST_RANDOM_NUMBER){
-            this.setState({
-                liveScore:this.state.liveScore + SCORE_FOR_MISSING_ZERO,
-                missedZeros:this.state.missedZeros + 1
-            })
-        }
-        else if (randomNumber > LEAST_RANDOM_NUMBER && randomNumber <= HIGHEST_RANDOM_NUMBER){
-            this.setState({
-                liveScore:this.state.liveScore + SCORE_FOR_MISSING_NON_ZERO,
-                missedNonZeros:this.state.missedNonZeros + 1
-            })
-        }
-        else{
-            console.log("Something went wrong")
-        }
+
+    // Method to generate random number from native side, if it is android otheriwse from react native side
+    generateRandomNumber = async() => {
+        let randomNumber = Platform.OS === 'android' ? await RandomNumberGeneratorModule.getRandomNumber() : Math.floor(Math.random() * (HIGHEST_RANDOM_NUMBER + 1))
+        this.setState({randomNumber: randomNumber})
     }
 
+    // Method to trigger game timer and start the game
     startGame = async () => {
         this.setState({
             isStarted: true,
         })
+        console.log(this.state.isPressed)
+
         this.generateRandomNumber()
 
         this.gameTimer = setInterval(() => {
-            let newTime;
-            newTime = this.state.gameTime - 1
-            this.setState({gameTime:newTime})
-
+            this.setState({
+                gameTime: (this.state.gameTime - 1)
+            })
             if(this.state.gameTime === 0){
                 this.clearTimer()
                 return
             }
             else if(this.state.gameTime % INTERVAL_BETWEEN_RANDOM_NUMBER_GENERATED === 0){
-                this.generateRandomNumber()
+                this.generateRandomNumber()  
                 this.setState({
-                    isPressed:false
-                })   
+                    isPressed: false,
+                })
             }
             else if(this.state.gameTime % INTERVAL_BETWEEN_RANDOM_NUMBER_GENERATED === TIME_GAP_BETWEEN_TWO_RANDOM_NUMBER_GENERATED){
                 if(this.state.isPressed !== true){
-                    this.liveScoreCalculationForNotPressingActivity(this.state.randomNumber)
+                    this.liveScoreCalculation(this.state.randomNumber, false)
                 }
                 this.setState({
                     randomNumber:"",
-                    colorChange: false
+                    colorChange: false,
                 })
             }
             else{
@@ -141,6 +152,8 @@ export default class GameScreen extends Component {
             }
         }, 1000)
     }
+
+    
 
     render(){
         return (
@@ -152,12 +165,12 @@ export default class GameScreen extends Component {
                     </View>
                     <View style={styles.randomNumberContainer}>
                         <Text style={styles.randomNumberText} 
-                            onPress={()=>{
+                            onPress={async ()=>{
                                     if(this.state.randomNumber >= LEAST_RANDOM_NUMBER && 
                                         this.state.randomNumber <= HIGHEST_RANDOM_NUMBER && 
                                         this.state.isPressed === false){
-                                            this.setState({isPressed:true})
-                                            this.liveScoreCalculationForPressingActivity(this.state.randomNumber)
+                                            await this.liveScoreCalculation(this.state.randomNumber, true)
+                                            this.setState({isPressed:true})   
                                     }
                             }}>
                             {this.state.randomNumber}
@@ -176,13 +189,16 @@ export default class GameScreen extends Component {
                             <Text style={styles.startButtonText}>Start Game</Text>
                         </TouchableOpacity>
                         ):(null)
-                        // <TouchableOpacity
-                        //     style={styles.stopButtonContainer}
-                        //     underlayColor={"#fff"}
-                        //     onPress={() => this.clearTimer()}
-                        // >
-                        //     <Text style={styles.stopButtontext}>Stop Game</Text>
-                        // </TouchableOpacity>
+
+                        // For development purpose 
+                        
+                            // <TouchableOpacity
+                            //     style={styles.stopButtonContainer}
+                            //     underlayColor={"#fff"}
+                            //     onPress={() => this.clearTimer()}
+                            // >
+                            //     <Text style={styles.stopButtontext}>Stop Game</Text>
+                            // </TouchableOpacity>
                         
                     }
                 </ScrollView>
@@ -267,4 +283,9 @@ const styles = StyleSheet.create({
     //     lineHeight: WINDOW_HEIGHT / 11.65
     // },
 })
+
+
+
+
+
 

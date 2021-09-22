@@ -22,12 +22,12 @@ export default class ResultScreen extends Component {
                 </View>
                 <View style={styles.cardContainer}>
                     {/* <Text style={styles.cardContainerText}>Game Played Time - {120 - this.props.route.params.timeElapsed} Secs</Text> */}
-                    <Text style={styles.cardContainerText}>Total Numbers displayed - {this.props.route.params.clickedZeros+ this.props.route.params.clickedNonZeros+ this.props.route.params.missedZeros+ this.props.route.params.missedNonZeros}</Text>
-                    <Text style={styles.cardContainerText}>Total 0's displayed - {this.props.route.params.clickedZeros + this.props.route.params.missedZeros}</Text>
-                    <Text style={styles.cardContainerText}>Count of Zero Clicked  - {this.props.route.params.clickedZeros}</Text>
-                    <Text style={styles.cardContainerText}>Count of Non-Zero Clicked - {this.props.route.params.clickedNonZeros}</Text>
-                    <Text style={styles.cardContainerText}>Count of Zero Missed - {this.props.route.params.missedZeros}</Text>
-                    <Text style={styles.cardContainerText}>Count of Non-Zero Missed - {this.props.route.params.missedNonZeros}</Text>
+                    <Text style={styles.cardContainerText}>Total Numbers displayed:  {this.props.route.params.clickedZeros+ this.props.route.params.clickedNonZeros+ this.props.route.params.missedZeros+ this.props.route.params.missedNonZeros}</Text>
+                    <Text style={styles.cardContainerText}>Total 0's displayed:  {this.props.route.params.clickedZeros + this.props.route.params.missedZeros}</Text>
+                    <Text style={styles.cardContainerText}>Count of Zero Clicked: {this.props.route.params.clickedZeros}</Text>
+                    <Text style={styles.cardContainerText}>Count of Non-Zero Clicked: {this.props.route.params.clickedNonZeros}</Text>
+                    <Text style={styles.cardContainerText}>Count of Zero Missed: {this.props.route.params.missedZeros}</Text>
+                    <Text style={styles.cardContainerText}>Count of Non-Zero Missed: {this.props.route.params.missedNonZeros}</Text>
                 </View>
             </ScrollView>
       </View>
@@ -65,6 +65,6 @@ export default class ResultScreen extends Component {
     cardContainerText:{
         marginLeft:"auto",
         marginRight:"auto",
-        fontSize:WINDOW_HEIGHT/30
+        fontSize:WINDOW_HEIGHT/25
     }
 })
