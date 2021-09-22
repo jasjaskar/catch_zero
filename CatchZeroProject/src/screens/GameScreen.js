@@ -67,7 +67,7 @@ export default class GameScreen extends Component {
                 missedZeros: this.state.missedZeros,
                 missedNonZeros : this.state.missedNonZeros,
                 liveScore: this.state.liveScore,
-              }
+            }
         )
         this.props.navigation.navigate("Result")
         this.setStateVariablesToInitialState()  
