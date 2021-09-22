@@ -79,7 +79,8 @@ export default class GameScreen extends Component {
             if(isClicked === true){
                 this.setState({
                     liveScore:this.state.liveScore + SCORE_FOR_CLICKING_ZERO,
-                    clickedZeros:this.state.clickedZeros + 1
+                    clickedZeros:this.state.clickedZeros + 1,
+                    isPressed: true
                 })
             }
             else{
@@ -95,6 +96,7 @@ export default class GameScreen extends Component {
                     clickedNonZeros:this.state.clickedNonZeros + 1,
                     liveScore:this.state.liveScore + SCORE_FOR_CLICKING_NON_ZERO,
                     colorChange: true,
+                    isPressed: true
                 })
             }
             else{
@@ -106,7 +108,7 @@ export default class GameScreen extends Component {
             
         }
         else{
-            console.log("Something went wrong with number", isClicked, "random", randomNumber)
+            console.log("Something went wrong with number")
         }
     }
 
@@ -122,7 +124,6 @@ export default class GameScreen extends Component {
         this.setState({
             isStarted: true,
         })
-        console.log(this.state.isPressed)
 
         this.generateRandomNumber()
 
@@ -172,7 +173,7 @@ export default class GameScreen extends Component {
                                         this.state.randomNumber <= HIGHEST_RANDOM_NUMBER && 
                                         this.state.isPressed === false){
                                             await this.liveScoreCalculation(this.state.randomNumber, true)
-                                            this.setState({isPressed:true})   
+                                            // this.setState({isPressed:true})   
                                     }
                             }}>
                             {this.state.randomNumber}
