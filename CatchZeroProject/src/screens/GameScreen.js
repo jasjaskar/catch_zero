@@ -17,6 +17,7 @@ import {
     SCORE_FOR_MISSING_ZERO,
     SCORE_FOR_MISSING_NON_ZERO
 } from "../common/globe";
+import { CommonContext } from '../Context/CommonContext';
 const { RandomNumberGeneratorModule } = NativeModules;
 
 
@@ -36,7 +37,6 @@ export default class GameScreen extends Component {
           missedNonZeros :0,
         };
         this.gameTimer = null;
-        console.log(this.state)
     }
 
 
@@ -60,14 +60,16 @@ export default class GameScreen extends Component {
     // Method to Clear the timer and route to result screen, After game over
     clearTimer = async() => {
         clearInterval(this.gameTimer);
-        this.props.navigation.navigate("Result",
-        {
-          clickedZeros: this.state.clickedZeros,
-          clickedNonZeros : this.state.clickedNonZeros,
-          missedZeros: this.state.missedZeros,
-          missedNonZeros : this.state.missedNonZeros,
-          liveScore: this.state.liveScore,
-        })
+        this.context.setLastPlayedScoreAndNumbersHistory(
+            {
+                clickedZeros: this.state.clickedZeros,
+                clickedNonZeros : this.state.clickedNonZeros,
+                missedZeros: this.state.missedZeros,
+                missedNonZeros : this.state.missedNonZeros,
+                liveScore: this.state.liveScore,
+              }
+        )
+        this.props.navigation.navigate("Result")
         this.setStateVariablesToInitialState()  
     }
 
@@ -206,6 +208,8 @@ export default class GameScreen extends Component {
         );
     }
 }
+
+GameScreen.contextType = CommonContext;
 
 
 const styles = StyleSheet.create({

@@ -2,35 +2,39 @@ import React, {Component} from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import HeaderComponent from '../Components/HeaderComponent';
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from '../common/globe';
+import { CommonContext } from '../Context/CommonContext';
 
 
 export default class ResultScreen extends Component {
 
     constructor(props){
         super(props);
-        console.log(this.props.route.params)
     }
 
     render(){
     return (
+        <CommonContext.Consumer>
+            {result =>
         <View>
             <HeaderComponent bgColor={"#ff9a5c"} Title={"Result"} goBack={true} />
             <ScrollView>
                 <View style={styles.headingContainer}>
                     <Text style={styles.headingText}>Game Over !!!</Text>
-                    <Text style={styles.headingText}>You Scored {this.props.route.params.liveScore}</Text>
+                    <Text style={styles.headingText}>You Scored {result.LastPlayedScoreAndNumbersHistory.liveScore}</Text>
                 </View>
                 <View style={styles.cardContainer}>
-                    {/* <Text style={styles.cardContainerText}>Game Played Time - {120 - this.props.route.params.timeElapsed} Secs</Text> */}
-                    <Text style={styles.cardContainerText}>Total Numbers displayed:  {this.props.route.params.clickedZeros+ this.props.route.params.clickedNonZeros+ this.props.route.params.missedZeros+ this.props.route.params.missedNonZeros}</Text>
-                    <Text style={styles.cardContainerText}>Total 0's displayed:  {this.props.route.params.clickedZeros + this.props.route.params.missedZeros}</Text>
-                    <Text style={styles.cardContainerText}>Count of Zero Clicked: {this.props.route.params.clickedZeros}</Text>
-                    <Text style={styles.cardContainerText}>Count of Non-Zero Clicked: {this.props.route.params.clickedNonZeros}</Text>
-                    <Text style={styles.cardContainerText}>Count of Zero Missed: {this.props.route.params.missedZeros}</Text>
-                    <Text style={styles.cardContainerText}>Count of Non-Zero Missed: {this.props.route.params.missedNonZeros}</Text>
+                    {/* <Text style={styles.cardContainerText}>Game Played Time - {120 - result.LastPlayedScoreAndNumbersHistory.timeElapsed} Secs</Text> */}
+                    <Text style={styles.cardContainerText}>Total Numbers displayed:  {result.LastPlayedScoreAndNumbersHistory.clickedZeros+ result.LastPlayedScoreAndNumbersHistory.clickedNonZeros+ result.LastPlayedScoreAndNumbersHistory.missedZeros+ result.LastPlayedScoreAndNumbersHistory.missedNonZeros}</Text>
+                    <Text style={styles.cardContainerText}>Total 0's displayed:  {result.LastPlayedScoreAndNumbersHistory.clickedZeros + result.LastPlayedScoreAndNumbersHistory.missedZeros}</Text>
+                    <Text style={styles.cardContainerText}>Count of Zero Clicked: {result.LastPlayedScoreAndNumbersHistory.clickedZeros}</Text>
+                    <Text style={styles.cardContainerText}>Count of Non-Zero Clicked: {result.LastPlayedScoreAndNumbersHistory.clickedNonZeros}</Text>
+                    <Text style={styles.cardContainerText}>Count of Zero Missed: {result.LastPlayedScoreAndNumbersHistory.missedZeros}</Text>
+                    <Text style={styles.cardContainerText}>Count of Non-Zero Missed: {result.LastPlayedScoreAndNumbersHistory.missedNonZeros}</Text>
                 </View>
             </ScrollView>
       </View>
+    }
+    </CommonContext.Consumer>
     );
     }
   }
