@@ -73,3 +73,9 @@ the screen. Please follow the rules and guidelines mentioned below.
      ● Please make a video of the app working and submit it with the code.
      ● Duration to complete 1-2 days
 ```
+
+## Implementation Notes
+```
+     I have implemented random number generation in Android native side. 
+     Please refer android/app/src/main/java/com/catchzeroproject/RandomNumberGeneratorModule.java
+```
