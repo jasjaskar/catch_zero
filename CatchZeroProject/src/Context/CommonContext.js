@@ -7,12 +7,6 @@ const CommonProvider = (props) => {
 
   const [LastPlayedScoreAndNumbersHistory, setLastPlayedScoreAndNumbersHistory] = useState(null)
 
-
-//   useEffect(() => {
-//     console.log("useEffect called");
-//     // setFoodFromUrl();
-//   })
-
   return (
     <CommonContext.Provider
       value={{
