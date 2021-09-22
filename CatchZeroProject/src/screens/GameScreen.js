@@ -180,8 +180,8 @@ export default class GameScreen extends Component {
                         </Text>
                     </View>
                     <View style={styles.timerContainer}>
-                        <Text style={styles.timerText}>{Math.trunc( this.state.gameTime/60).toString().padStart(2,0)}{":"}{(this.state.gameTime%60).toString().padStart(2,0)}</Text>
-                        <Text style={styles.timerTextFormat}>{"MM:SS"}</Text>
+                        <Text style={styles.timerText}>{Math.trunc(this.state.gameTime/60).toString().padStart(2,0)}{":"}{(this.state.gameTime%60).toString().padStart(2,0)}</Text>
+                        <Text style={styles.timerTextFormat}>{"mm:ss"}</Text>
                     </View>
                     {!(this.state.isStarted) ? (
                         <TouchableOpacity
